@@ -1,27 +1,19 @@
 //SPDX-License-Identifier: Unlicense
  pragma solidity ^0.8.0;
- contract receiptToken {
+ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC20/ERC20.sol";
+ contract receiptToken is ERC20{
+
+constructor() ERC20("Receipt token", "RT"){}
 /*
 @notice - is used to mint receipt token
 */
-string name = "Receipt Token";
-string symbol = "RT";
-mapping(address => uint256) balance;
-
 function mint(uint256 amount, address to) public {
-    require(to != address(0), "invalid address");
-    uint256 am = amount * 10e18;
-    balance[to] += am;
+    _mint(to, amount);
 
 }
-
 function burn(uint256 amount, address from) public {
-    require(balance[from] >= amount, "you don't have enough amount to burn");
-    uint256 am = amount * 10e18;
-    balance[from]-= am;
+    _burn(from, amount);
 }
 
-function balanceOf(address owner) public view returns(uint256 _balance){
-    _balance = balance[owner];
-}
+
  }
