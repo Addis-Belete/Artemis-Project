@@ -9,7 +9,7 @@ function balanceOf(address account) external view returns (uint256);
 
 
 }
- contract DAIPool {
+ contract DAIPool  {
      // This contract gives 30% APY for stakers
      // Reward calculated per month and added to the user Balance;
      address predefinedTokenAddress;
@@ -49,10 +49,30 @@ function deposit(uint256 amount) public {
 }
 /*
 @notice - Function used to withdraw funds from the contract
+@param amount - amount of receipt token owner wants to redeem
+@param owner - address of owner
 
 */
-function withdraw(uint256 amount, address to) public {
+function withdraw(uint256 amount, address owner) public {
+require(IERC20(receiptTokenAddress).balanceOf(owner) >= amount, "you don't have enough amount to redeem");
+require(owner != address(0), "Invalid address");
+uint256 userBalance = UserDetails[owner].amount;
+uint256 initialTime = UserDetails[owner].dep_started;
+uint256 reward = calculateReward(userBalance, initialTime);
+UserDetails[owner].amount += reward;
 
+if(amount == IERC20(receiptTokenAddress).balanceOf(owner)){
+  UserDetails[owner].amount = 0; 
+  UserDetails[owner].isDeposited = false;
+  DAI.transferFrom(address(this), owner, UserDetails[owner].amount);
+}
+else{
+uint256 amountToWithdraw = calculareShare(amount, owner);
+UserDetails[owner].amount -= amountToWithdraw;
+UserDetails[owner].dep_started = block.timestamp;
+DAI.transferFrom(address(this), owner, amountToWithdraw);
+}
+IreceiptToken(receiptTokenAddress).burn(amount, owner);
 }
 
 /*
