@@ -13,6 +13,7 @@ function burn(uint256 amount, address from) external;
      // Reward calculated per month and added to the user Balance;
      address predefinedTokenAddress;
      address receiptTokenAddress;
+     
    constructor(address _predefinedToken, address _receiptToken) {
    predefinedTokenAddress = _predefinedToken;
    receiptTokenAddress = _receiptToken;
@@ -45,6 +46,13 @@ function deposit(uint256 amount) public {
    }
    IreceiptToken(receiptTokenAddress).mint(amount, msg.sender);
 }
+/*
+@notice - Function used to withdraw funds from the contract
+
+*/
+function withdraw(uint256 amount, address to) public {
+
+}
 
 /*
 @notice - Function used to calculate rewards;
@@ -59,5 +67,9 @@ function calculateReward(uint256 amount, uint256 startTime) public view returns(
    reward = amount * rewardPercent;
 
 }
+/*
+@notice - Function used to convert the amount of receipt token to predefined token
+*/
+
      
  }
