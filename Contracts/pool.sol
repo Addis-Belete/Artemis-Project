@@ -5,6 +5,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 interface IreceiptToken {
 function mint(uint256 amount, address to) external;
 function burn(uint256 amount, address from) external;
+function balanceOf(address account) external view returns (uint256);
 
 
 }
@@ -69,7 +70,14 @@ function calculateReward(uint256 amount, uint256 startTime) public view returns(
 }
 /*
 @notice - Function used to convert the amount of receipt token to predefined token
+@param share - the amount of receipt token to redeem
+@param owner - address of the owner
 */
-
+function calculareShare(uint256 share, address owner) public view returns (uint256){
+   uint256 fullAmount = UserDetails[owner].amount;
+   uint256 totalShare = IERC20(receiptTokenAddress).balanceOf(owner);
+   uint256 amountToBeWithdrawed = (fullAmount * share)/totalShare;
+    return amountToBeWithdrawed;
+}
      
  }
